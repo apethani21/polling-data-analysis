@@ -122,18 +122,34 @@ def process_wvi_data(df):
     return df
 
 
-def plot_vote_intention(df, add_lockdown_context=False, add_lifetime_context=False):
-    df[list(parties)].plot(figsize=(20, 10),
-                           linewidth=1,
-                           marker='o',
-                           markersize=5,
-                           color=[color_dict[col] for col in df[list(parties)].columns])
+def plot_vote_intention(df, add_lockdown_context=False, add_lifetime_context=False, agg=None, markersize=None):
+    """agg: D, W, M, Q etc."""
+    ax = df[list(parties)].plot(figsize=(20, 10),
+                                linewidth=1 if agg is None else 0,
+                                marker='o',
+                                markersize=markersize if markersize is not None else (3 if agg is None else 1),
+                                alpha=1 if agg is None else 0.75,
+                                color=[color_dict[col] for col in df[list(parties)].columns], legend=True)
 
+    if agg is not None:
+        (df
+         .resample(agg, label='right')
+         .mean()[list(parties)]
+         .plot(linewidth=3,
+               color=[color_dict[col] for col in df[list(parties)].columns], ax=ax,
+               label=None))
+
+    handles, labels = plt.gca().get_legend_handles_labels()
+    by_label = dict(zip(labels, handles))
+    plt.legend(by_label.values(), by_label.keys(), bbox_to_anchor=(1, 0.5), loc="center left", borderaxespad=0)
     plt.xlim((df.index.min() - pd.Timedelta(14, 'D')).date(), (df.index.max() + pd.Timedelta(14, 'D')).date())
     plt.xlabel("Date", fontweight='bold')
     plt.ylabel("% Poll", fontweight='bold')
-    plt.title("Westminster Voting Intention", fontweight='bold', y=1.1)
-    plt.legend(bbox_to_anchor=(1, 0.5), loc="center left", borderaxespad=0)
+    if agg is None:
+        plt.title(f"Westminster Voting Intention", fontweight='bold', y=1.1)
+    else:
+        agg_fullname = {"D": "Daily", "W": "Weekly", "M": "Monthly", "Q": "Quarterly"}.get(agg, agg)
+        plt.title(f"Westminster Voting Intention - {agg_fullname} Aggregation", fontweight='bold', y=1.1)
 
     if add_lockdown_context:
         plt.axvline(pd.to_datetime("23 March 2020"), color="black", ymin=0.045, linewidth=3)
