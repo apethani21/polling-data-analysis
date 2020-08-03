@@ -124,12 +124,17 @@ def process_wvi_data(df):
 
 def plot_vote_intention(df, add_lockdown_context=False, add_lifetime_context=False, agg=None, markersize=None):
     """agg: D, W, M, Q etc."""
-    ax = df[list(parties)].plot(figsize=(20, 10),
-                                linewidth=1 if agg is None else 0,
-                                marker='o',
-                                markersize=markersize if markersize is not None else (3 if agg is None else 1),
-                                alpha=1 if agg is None else 0.75,
-                                color=[color_dict[col] for col in df[list(parties)].columns], legend=True)
+    if agg is not None:
+        fig, (ax, ax2) = plt.subplots(2, 1, figsize=(20, 15), gridspec_kw={'height_ratios': [3, 1]})
+    else:
+        fig, ax = plt.subplots(1, 1, figsize=(20, 10))
+
+    df[list(parties)].plot(ax=ax,
+                           linewidth=1 if agg is None else 0,
+                           marker='o',
+                           markersize=markersize if markersize is not None else (3 if agg is None else 1),
+                           alpha=1 if agg is None else 0.75,
+                           color=[color_dict[col] for col in df[list(parties)].columns], legend=True)
 
     if agg is not None:
         (df
@@ -138,56 +143,61 @@ def plot_vote_intention(df, add_lockdown_context=False, add_lifetime_context=Fal
          .plot(linewidth=3,
                color=[color_dict[col] for col in df[list(parties)].columns], ax=ax,
                label=None))
+        df.resample(agg, label='right').count()[list(parties)].plot(linewidth=1,
+                                                                    color=[color_dict[col] for col in df[list(parties)].columns],
+                                                                    ax=ax2)
+        ax2.legend(bbox_to_anchor=(1, 0.5), loc="center left", borderaxespad=0)
 
-    handles, labels = plt.gca().get_legend_handles_labels()
+    handles, labels = ax.get_legend_handles_labels()
     by_label = dict(zip(labels, handles))
-    plt.legend(by_label.values(), by_label.keys(), bbox_to_anchor=(1, 0.5), loc="center left", borderaxespad=0)
-    plt.xlim((df.index.min() - pd.Timedelta(14, 'D')).date(), (df.index.max() + pd.Timedelta(14, 'D')).date())
-    plt.xlabel("Date", fontweight='bold')
-    plt.ylabel("% Poll", fontweight='bold')
+    ax.legend(by_label.values(), by_label.keys(), bbox_to_anchor=(1, 0.5), loc="center left", borderaxespad=0)
+    ax.set_xlim((df.index.min() - pd.Timedelta(14, 'D')).date(), (df.index.max() + pd.Timedelta(14, 'D')).date())
+    ax.set_xlabel("Date", fontweight='bold')
+    ax.set_ylabel("% Poll", fontweight='bold')
     if agg is None:
-        plt.title(f"Westminster Voting Intention", fontweight='bold', y=1.1)
+        ax.set_title(f"Westminster Voting Intention", fontweight='bold', y=1.1)
     else:
-        agg_fullname = {"D": "Daily", "W": "Weekly", "M": "Monthly", "Q": "Quarterly"}.get(agg, agg)
-        plt.title(f"Westminster Voting Intention - {agg_fullname} Aggregation", fontweight='bold', y=1.1)
+        agg_fullname = {"D": "Daily", "W": "Weekly", "M": "Monthly", "SM": "Semi-Month", "Q": "Quarterly"}.get(agg, agg)
+        ax.set_title(f"Westminster Voting Intention - {agg_fullname} Aggregation", fontweight='bold', y=1.1)
+        ax2.set_ylabel(f"Polls - {agg_fullname} counts")
 
     if add_lockdown_context:
-        plt.axvline(pd.to_datetime("23 March 2020"), color="black", ymin=0.045, linewidth=3)
-        plt.axvline(pd.to_datetime("10 May 2020"), color="black", ymin=0.045, linewidth=3)
+        ax.axvline(pd.to_datetime("23 March 2020"), color="black", ymin=0.045, linewidth=3)
+        ax.axvline(pd.to_datetime("10 May 2020"), color="black", ymin=0.045, linewidth=3)
 
-        plt.axvspan(pd.to_datetime("23 March 2020"), pd.to_datetime("10 May 2020"), alpha=0.25, color='red', ymin=0.045)
-        plt.text(pd.to_datetime("17 Apr 2020"), 20, "Height of lockdown",
+        ax.axvspan(pd.to_datetime("23 March 2020"), pd.to_datetime("10 May 2020"), alpha=0.25, color='red', ymin=0.045)
+        ax.text(pd.to_datetime("17 Apr 2020"), 20, "Height of lockdown",
                  style='italic', fontweight='bold', horizontalalignment='center', fontsize=20)
-        plt.text(pd.to_datetime("17 Apr 2020"), 17, "Stay at home → Stay Alert", style='italic', horizontalalignment='center')
+        ax.text(pd.to_datetime("17 Apr 2020"), 17, "Stay at home → Stay Alert", style='italic', horizontalalignment='center')
 
-        plt.axvline(pd.to_datetime("4 April 2020"), color="black", ymin=0.045, linewidth=3, alpha=0.4)
-        plt.text(pd.to_datetime("12 Apr 2020"), 35, "Kier Starmer \n becomes \n Labour leader \n 4 Apr", 
+        ax.axvline(pd.to_datetime("4 April 2020"), color="black", ymin=0.045, linewidth=3, alpha=0.4)
+        ax.text(pd.to_datetime("12 Apr 2020"), 35, "Kier Starmer \n becomes \n Labour leader \n 4 Apr", 
                  style='italic', horizontalalignment='center', fontsize=10, fontweight='bold');
     if add_lifetime_context:
-        plt.axvline(pd.to_datetime("22 Jan 2013"), color="black", ymin=0.045, ymax=0.96, linewidth=3)
-        plt.text(pd.to_datetime("22 Jan 2013"), 54.5, "Cameron offers \n EU Ref upon \n winning next GE", 
+        ax.axvline(pd.to_datetime("22 Jan 2013"), color="black", ymin=0.045, ymax=0.96, linewidth=3)
+        ax.text(pd.to_datetime("22 Jan 2013"), 54.5, "Cameron offers \n EU Ref upon \n winning next GE", 
                  style='italic', horizontalalignment='center', fontsize=11, fontweight='bold')
         
-        plt.axvline(pd.to_datetime("8 May 2015"), color="black", ymin=0.045, ymax=0.96, linewidth=3)
-        plt.text(pd.to_datetime("8 May 2015"), 54.5, "Cameron \n remains PM \n maj. 12", 
+        ax.axvline(pd.to_datetime("8 May 2015"), color="black", ymin=0.045, ymax=0.96, linewidth=3)
+        ax.text(pd.to_datetime("8 May 2015"), 54.5, "Cameron \n remains PM \n maj. 12", 
                  style='italic', horizontalalignment='center', fontsize=11, fontweight='bold')
                  
-        plt.axvline(pd.to_datetime("23 June 2016"), color="black", ymin=0.045, ymax=0.96, linewidth=3)
-        plt.text(pd.to_datetime("23 June 2016"), 54.5, "EU Referendum. \n 3 weeks later, May \n becomes PM", 
+        ax.axvline(pd.to_datetime("23 June 2016"), color="black", ymin=0.045, ymax=0.96, linewidth=3)
+        ax.text(pd.to_datetime("23 June 2016"), 54.5, "EU Referendum. \n 3 weeks later, May \n becomes PM", 
                  style='italic', horizontalalignment='center', fontsize=11, fontweight='bold')
         
-        plt.axvline(pd.to_datetime("9 June 2017"), color="black", ymin=0.045, ymax=0.96, linewidth=3)
-        plt.text(pd.to_datetime("9 June 2017"), 54.5, "May calls \n snap election, \n minority govt \n C&S with DUP", 
+        ax.axvline(pd.to_datetime("9 June 2017"), color="black", ymin=0.045, ymax=0.96, linewidth=3)
+        ax.text(pd.to_datetime("9 June 2017"), 54.5, "May calls \n snap election, \n minority govt \n C&S with DUP", 
                  style='italic', horizontalalignment='center', fontsize=11, fontweight='bold')
 
-        plt.axvline(pd.to_datetime("1 Jan 2019"), color="black", ymin=0.045, ymax=0.96, linewidth=3)
-        plt.text(pd.to_datetime("15 Sept 2018"), 54.5, "Commons rejects WA \n  and no deal \n (in principle).\n Commons backs \n Brady amendment",
+        ax.axvline(pd.to_datetime("1 Jan 2019"), color="black", ymin=0.045, ymax=0.96, linewidth=3)
+        ax.text(pd.to_datetime("15 Sept 2018"), 54.5, "Commons rejects WA \n  and no deal \n (in principle).\n Commons backs \n Brady amendment",
                  style='italic', horizontalalignment='center', fontsize=10, fontweight='bold')
         
-        plt.axvline(pd.to_datetime("24 July 2019"), color="black", ymin=0.045, ymax=0.96, linewidth=3)
-        plt.text(pd.to_datetime("24 July 2019"), 54.5, "Johnson \n becomes PM \n maj. 80", 
+        ax.axvline(pd.to_datetime("24 July 2019"), color="black", ymin=0.045, ymax=0.96, linewidth=3)
+        ax.text(pd.to_datetime("24 July 2019"), 54.5, "Johnson \n becomes PM \n maj. 80", 
                  style='italic', horizontalalignment='center', fontsize=11, fontweight='bold')
         
-        plt.axvline(pd.to_datetime("23 March 2020"), color="black", ymin=0.045, ymax=0.96, linewidth=3)
-        plt.text(pd.to_datetime("23 March 2020"), 54.5, "COVID19 \n Lockdown", 
+        ax.axvline(pd.to_datetime("23 March 2020"), color="black", ymin=0.045, ymax=0.96, linewidth=3)
+        ax.text(pd.to_datetime("23 March 2020"), 54.5, "COVID19 \n Lockdown", 
                  style='italic', horizontalalignment='center', fontsize=11, fontweight='bold');
