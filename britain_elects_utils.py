@@ -148,22 +148,30 @@ def plot_vote_intention(df, add_lockdown_context=False, add_lifetime_context=Fal
         plt.text(pd.to_datetime("12 Apr 2020"), 35, "Kier Starmer \n becomes \n Labour leader \n 4 Apr", 
                  style='italic', horizontalalignment='center', fontsize=10, fontweight='bold');
     if add_lifetime_context:
-        plt.axvline(pd.to_datetime("23 March 2020"), color="black", ymin=0.045, ymax=0.95, linewidth=3)
-        plt.text(pd.to_datetime("23 March 2020"), 54, "COVID19 \n Lockdown", 
-                 style='italic', horizontalalignment='center', fontsize=11.5, fontweight='bold')
+        plt.axvline(pd.to_datetime("22 Jan 2013"), color="black", ymin=0.045, ymax=0.96, linewidth=3)
+        plt.text(pd.to_datetime("22 Jan 2013"), 54.5, "Cameron offers \n EU Ref upon \n winning next GE", 
+                 style='italic', horizontalalignment='center', fontsize=11, fontweight='bold')
         
-        plt.axvline(pd.to_datetime("8 May 2015"), color="black", ymin=0.045, ymax=0.95, linewidth=3)
-        plt.text(pd.to_datetime("8 May 2015"), 54, "Cameron \n becomes PM \n maj. 12", 
-                 style='italic', horizontalalignment='center', fontsize=11.5, fontweight='bold')
+        plt.axvline(pd.to_datetime("8 May 2015"), color="black", ymin=0.045, ymax=0.96, linewidth=3)
+        plt.text(pd.to_datetime("8 May 2015"), 54.5, "Cameron \n remains PM \n maj. 12", 
+                 style='italic', horizontalalignment='center', fontsize=11, fontweight='bold')
                  
-        plt.axvline(pd.to_datetime("23 June 2016"), color="black", ymin=0.045, ymax=0.95, linewidth=3)
-        plt.text(pd.to_datetime("23 June 2016"), 54, "EU Referendum. \n 3 weeks later, May \n becomes PM", 
-                 style='italic', horizontalalignment='center', fontsize=11.5, fontweight='bold')
+        plt.axvline(pd.to_datetime("23 June 2016"), color="black", ymin=0.045, ymax=0.96, linewidth=3)
+        plt.text(pd.to_datetime("23 June 2016"), 54.5, "EU Referendum. \n 3 weeks later, May \n becomes PM", 
+                 style='italic', horizontalalignment='center', fontsize=11, fontweight='bold')
         
-        plt.axvline(pd.to_datetime("9 June 2017"), color="black", ymin=0.045, ymax=0.95, linewidth=3)
-        plt.text(pd.to_datetime("9 June 2017"), 54, "May calls \n snap election, \n minority govt \n C&S with DUP", 
-                 style='italic', horizontalalignment='center', fontsize=11.5, fontweight='bold')
+        plt.axvline(pd.to_datetime("9 June 2017"), color="black", ymin=0.045, ymax=0.96, linewidth=3)
+        plt.text(pd.to_datetime("9 June 2017"), 54.5, "May calls \n snap election, \n minority govt \n C&S with DUP", 
+                 style='italic', horizontalalignment='center', fontsize=11, fontweight='bold')
 
-        plt.axvline(pd.to_datetime("24 July 2019"), color="black", ymin=0.045, ymax=0.95, linewidth=3)
-        plt.text(pd.to_datetime("24 July 2019"), 54, "Johnson \n becomes PM \n maj. 80", 
-                 style='italic', horizontalalignment='center', fontsize=11.5, fontweight='bold');
+        plt.axvline(pd.to_datetime("1 Jan 2019"), color="black", ymin=0.045, ymax=0.96, linewidth=3)
+        plt.text(pd.to_datetime("15 Sept 2018"), 54.5, "Commons rejects WA \n  and no deal \n (in principle).\n Commons backs \n Brady amendment",
+                 style='italic', horizontalalignment='center', fontsize=10, fontweight='bold')
+        
+        plt.axvline(pd.to_datetime("24 July 2019"), color="black", ymin=0.045, ymax=0.96, linewidth=3)
+        plt.text(pd.to_datetime("24 July 2019"), 54.5, "Johnson \n becomes PM \n maj. 80", 
+                 style='italic', horizontalalignment='center', fontsize=11, fontweight='bold')
+        
+        plt.axvline(pd.to_datetime("23 March 2020"), color="black", ymin=0.045, ymax=0.96, linewidth=3)
+        plt.text(pd.to_datetime("23 March 2020"), 54.5, "COVID19 \n Lockdown", 
+                 style='italic', horizontalalignment='center', fontsize=11, fontweight='bold');
