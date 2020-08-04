@@ -31,3 +31,10 @@ os.makedirs("./britain_elects_pm_preference_data", exist_ok=True)
 for doc in pm_preference_docs:
     with open(f"./britain_elects_pm_preference_data/{doc['_id']}.json", "w") as f:
         json.dump(doc, f, indent=4)
+
+all_docs = collection.find(projection=projection)
+os.makedirs("./britain_elects_all", exist_ok=True)
+for doc in all_docs:
+    with open(f"./britain_elects_all/{doc['_id']}.json", "w") as f:
+        json.dump(doc, f, indent=4)
+
