@@ -34,7 +34,6 @@ for doc in pm_preference_docs:
 
 all_docs = collection.find(projection=projection)
 os.makedirs("./britain_elects_all", exist_ok=True)
-for doc in all_docs:
-    with open(f"./britain_elects_all/{doc['_id']}.json", "w") as f:
-        json.dump(doc, f, indent=4)
+df = pd.DataFrame([doc for doc in all_docs])
+df.to_csv(f"./britain_elects_all/britain_elects_all.csv", index=False)
 
