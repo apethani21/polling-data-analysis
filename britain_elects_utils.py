@@ -200,4 +200,6 @@ def plot_vote_intention(df, add_lockdown_context=False, add_lifetime_context=Fal
         
         ax.axvline(pd.to_datetime("23 March 2020"), color="black", ymin=0.045, ymax=0.96, linewidth=3)
         ax.text(pd.to_datetime("23 March 2020"), 54.5, "COVID19 \n Lockdown", 
-                 style='italic', horizontalalignment='center', fontsize=11, fontweight='bold');
+                 style='italic', horizontalalignment='center', fontsize=11, fontweight='bold')
+        
+        return fig
