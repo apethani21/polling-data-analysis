@@ -1,4 +1,4 @@
-# polling-data-analysis
+# Analysing aggregated UK polling data
 
 - The tweet collection & storage pipeline used in [email-service](https://github.com/apethani21/email-service) is used to also collect tweets from [@britainelects](https://twitter.com/britainelects).
 - The additional polling historical data in uk_polling_report_historical.csv was scraped from [UK Polling Report](http://ukpollingreport.co.uk/voting-intention-2).
