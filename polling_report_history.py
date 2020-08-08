@@ -15,6 +15,7 @@ def read_historical_polling_report():
                            "Kantar": "KantarPublic"
                        }))
     histo.drop(columns='CON_LEAD', inplace=True)
+    histo.drop_duplicates(inplace=True, ignore_index=True)
     histo = histo[histo["end"] < pd.to_datetime("2020-01-10", dayfirst=False)]
     histo.set_index("end", drop=False, inplace=True)
     histo.sort_index(ascending=False)
