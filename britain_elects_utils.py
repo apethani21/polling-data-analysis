@@ -213,7 +213,8 @@ def null_values_plot(df, date_col="date", freq="M"):
     fig.suptitle('Null Values Analysis', weight="bold")
     fig.subplots_adjust(top=0.9)
 
-    gs = GridSpec(2, 2, wspace=0.01, hspace=0.02, width_ratios=[2, 1], height_ratios=[3, 1])
+    gs = GridSpec(2, 2, wspace=0.01, hspace=0.05,
+                  width_ratios=[2, 1], height_ratios=[3, 1])
 
     ax1 = fig.add_subplot(gs[0, 0])
     ax2 = fig.add_subplot(gs[0, 1], sharey=ax1)
@@ -223,14 +224,22 @@ def null_values_plot(df, date_col="date", freq="M"):
         df.index = df[date_col].copy()
     sns.heatmap(df.T.isnull(), cbar=False, ax=ax1, cmap="binary")
     null_counts = df.isnull().sum(axis='rows')
-    null_counts.plot.barh(ax=ax2, color="#4e5a65", width=1, align='edge')
+    null_counts.plot.barh(ax=ax2, color="#4e5a65", width=0.95, align='edge')
+    for p in ax2.patches:
+        ax2.annotate(p.get_width(), (p.get_x() + p.get_width(), p.get_y()+0.1), xytext=(5, 10),
+                     textcoords='offset points')
     df.resample(freq).size().plot(ax=ax3, color="#4e5a65", linewidth=2)
 
     ax1.set_xticks([])
     ax1.set_ylabel('')    
     ax1.set_xlabel('')
     ax1.spines['left'].set_visible(False)
-    ax1.set_yticklabels(ax1.get_yticklabels(), rotation=0, horizontalalignment='right', verticalalignment='baseline')
+    ax1.set_yticklabels(ax1.get_yticklabels(), rotation=0,
+                        horizontalalignment='right',
+                        verticalalignment='baseline')
+    
+    ax2.spines['right'].set_visible(False)
+    ax2.spines['top'].set_visible(False)
 
     ax1.set_title("Null values heatmap")
     ax2.set_title("Number of null values")
