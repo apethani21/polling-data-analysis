@@ -84,7 +84,8 @@ def process_wvi_data(df):
                      .apply(extract_party_results))
 
     df["sources_info"] = (df['full_text']
-                          .apply(lambda x: [text for text in x if 'via ' in text.lower()][0])
+                          .apply(lambda x: [text for text in x if 'via ' in text.lower()])
+                          .apply(lambda x: x[0] if len(x) > 0 else "")
                           .str.split(','))
 
     df["source"] = (df["sources_info"]
