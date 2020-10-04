@@ -77,6 +77,7 @@ def process_wvi_data(df):
     df["created_at"] = pd.to_datetime(df["created_at"]).dt.tz_localize(None)
     df.sort_values(by="created_at", inplace=True, ignore_index=True)
     poll_results_regex = "^([A-Z]){3,4}:[ ]{1,}[0-9]{1,3}%[ ]{1,}\((.)?([0-9]{1,3})?\)$"
+    df["full_text"] = df["full_text"].str.replace(u'\xa0', u'')
     df['full_text'] = df['full_text'].str.split("\n")
 
     df["results"] = (df['full_text']
@@ -146,7 +147,8 @@ def plot_vote_intention(df, add_lockdown_context=False, add_lifetime_context=Fal
          .mean()[list(parties)]
          .plot(linewidth=3,
                color=[color_dict[col] for col in df[list(parties)].columns], ax=ax,
-               label=None))
+               label=None,
+               zorder=10))
         df.resample(agg, label='right').count()[list(parties)].plot(linewidth=1,
                                                                     color=[color_dict[col] for col in df[list(parties)].columns],
                                                                     ax=ax2)
@@ -166,43 +168,43 @@ def plot_vote_intention(df, add_lockdown_context=False, add_lifetime_context=Fal
         ax2.set_ylabel(f"Polls - {agg_fullname} counts")
 
     if add_lockdown_context:
-        ax.axvline(pd.to_datetime("23 March 2020"), color="black", ymin=0.045, linewidth=3)
-        ax.axvline(pd.to_datetime("10 May 2020"), color="black", ymin=0.045, linewidth=3)
+        ax.axvline(pd.to_datetime("23 March 2020"), color="dimgrey", ymin=0.045, linewidth=3)
+        ax.axvline(pd.to_datetime("10 May 2020"), color="dimgrey", ymin=0.045, linewidth=3)
 
         ax.axvspan(pd.to_datetime("23 March 2020"), pd.to_datetime("10 May 2020"), alpha=0.25, color='red', ymin=0.045)
         ax.text(pd.to_datetime("17 Apr 2020"), 20, "Height of lockdown",
                  style='italic', fontweight='bold', horizontalalignment='center', fontsize=20)
         ax.text(pd.to_datetime("17 Apr 2020"), 17, "Stay at home → Stay Alert", style='italic', horizontalalignment='center')
 
-        ax.axvline(pd.to_datetime("4 April 2020"), color="black", ymin=0.045, linewidth=3, alpha=0.4)
+        ax.axvline(pd.to_datetime("4 April 2020"), color="dimgrey", ymin=0.045, linewidth=3, alpha=0.4)
         ax.text(pd.to_datetime("12 Apr 2020"), 35, "Kier Starmer \n becomes \n Labour leader \n 4 Apr", 
                  style='italic', horizontalalignment='center', fontsize=10, fontweight='bold');
     if add_lifetime_context:
-        ax.axvline(pd.to_datetime("22 Jan 2013"), color="black", ymin=0.045, ymax=0.96, linewidth=3)
+        ax.axvline(pd.to_datetime("22 Jan 2013"), color="dimgrey", ymin=0.045, ymax=0.96, linewidth=3)
         ax.text(pd.to_datetime("22 Jan 2013"), 54.5, "Cameron offers \n EU Ref upon \n winning next GE", 
                  style='italic', horizontalalignment='center', fontsize=11, fontweight='bold')
         
-        ax.axvline(pd.to_datetime("8 May 2015"), color="black", ymin=0.045, ymax=0.96, linewidth=3)
+        ax.axvline(pd.to_datetime("8 May 2015"), color="dimgrey", ymin=0.045, ymax=0.96, linewidth=3)
         ax.text(pd.to_datetime("8 May 2015"), 54.5, "Cameron \n remains PM \n maj. 12", 
                  style='italic', horizontalalignment='center', fontsize=11, fontweight='bold')
                  
-        ax.axvline(pd.to_datetime("23 June 2016"), color="black", ymin=0.045, ymax=0.96, linewidth=3)
+        ax.axvline(pd.to_datetime("23 June 2016"), color="dimgrey", ymin=0.045, ymax=0.96, linewidth=3)
         ax.text(pd.to_datetime("23 June 2016"), 54.5, "EU Referendum. \n 3 weeks later, May \n becomes PM", 
                  style='italic', horizontalalignment='center', fontsize=11, fontweight='bold')
         
-        ax.axvline(pd.to_datetime("9 June 2017"), color="black", ymin=0.045, ymax=0.96, linewidth=3)
+        ax.axvline(pd.to_datetime("9 June 2017"), color="dimgrey", ymin=0.045, ymax=0.96, linewidth=3)
         ax.text(pd.to_datetime("9 June 2017"), 54.5, "May calls \n snap election, \n minority govt \n C&S with DUP", 
                  style='italic', horizontalalignment='center', fontsize=11, fontweight='bold')
 
-        ax.axvline(pd.to_datetime("1 Jan 2019"), color="black", ymin=0.045, ymax=0.96, linewidth=3)
+        ax.axvline(pd.to_datetime("1 Jan 2019"), color="dimgrey", ymin=0.045, ymax=0.96, linewidth=3)
         ax.text(pd.to_datetime("15 Sept 2018"), 54.5, "Commons rejects WA \n  and no deal \n (in principle).\n Commons backs \n Brady amendment",
                  style='italic', horizontalalignment='center', fontsize=10, fontweight='bold')
         
-        ax.axvline(pd.to_datetime("24 July 2019"), color="black", ymin=0.045, ymax=0.96, linewidth=3)
+        ax.axvline(pd.to_datetime("24 July 2019"), color="dimgrey", ymin=0.045, ymax=0.96, linewidth=3)
         ax.text(pd.to_datetime("24 July 2019"), 54.5, "Johnson \n becomes PM \n maj. 80", 
                  style='italic', horizontalalignment='center', fontsize=11, fontweight='bold')
         
-        ax.axvline(pd.to_datetime("23 March 2020"), color="black", ymin=0.045, ymax=0.96, linewidth=3)
+        ax.axvline(pd.to_datetime("23 March 2020"), color="dimgrey", ymin=0.045, ymax=0.96, linewidth=3)
         ax.text(pd.to_datetime("23 March 2020"), 54.5, "COVID19 \n Lockdown", 
                  style='italic', horizontalalignment='center', fontsize=11, fontweight='bold');
         
@@ -225,11 +227,11 @@ def null_values_plot(df, date_col="date", freq="M"):
         df.index = df[date_col].copy()
     sns.heatmap(df.T.isnull(), cbar=False, ax=ax1, cmap="binary")
     null_counts = df.isnull().sum(axis='rows')
-    null_counts.plot.barh(ax=ax2, color="#4e5a65", width=0.95, align='edge')
+    null_counts.plot.barh(ax=ax2, color="#4e5a65", width=0.95, align='edge', zorder=10)
     for p in ax2.patches:
         ax2.annotate(p.get_width(), (p.get_x() + p.get_width(), p.get_y()+0.1), xytext=(5, 10),
                      textcoords='offset points')
-    df.resample(freq).size().plot(ax=ax3, color="#4e5a65", linewidth=2)
+    df.resample(freq).size().plot(ax=ax3, color="#4e5a65", linewidth=2, zorder=10)
 
     ax1.set_xticks([])
     ax1.set_ylabel('')    
