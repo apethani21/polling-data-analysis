@@ -88,13 +88,13 @@ def process_wvi_data(df):
                           .apply(lambda x: [text for text in x if 'via ' in text.lower()])
                           .apply(lambda x: x[0] if len(x) > 0 else "")
                           .str.split(','))
-
     df["source"] = (df["sources_info"]
                     .apply(lambda x: x[0][3:].strip() if len(x) > 0 else np.nan)
                     .replace({
-                        "@YouGov https://t.co/z0lyoLiIMv": "@YouGov",
+                        "@YouGov https://t.co/z0lyoLiIMv": "YouGov",
                         "@RedfieldWIlton": "RedfieldWilton",
-                        "Redfield &amp; Wilton": "RedfieldWilton"
+                        "Redfield &amp; Wilton": "RedfieldWilton",
+                        "@OpiniumResearch https://t.co/bfyhsXXkrP": "OpiniumResearch"
                     })
                     .apply(lambda x: x[1:] if (not pd.isnull(x)) and x.startswith('@') else x))
 
