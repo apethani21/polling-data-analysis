@@ -173,7 +173,7 @@ def plot_vote_intention(df, add_lockdown_context=False, add_lifetime_context=Fal
 
         ax.axvspan(pd.to_datetime("23 March 2020"), pd.to_datetime("10 May 2020"), alpha=0.25, color='red', ymin=0.045)
         ax.text(pd.to_datetime("17 Apr 2020"), 20, "Height of lockdown",
-                 style='italic', fontweight='bold', horizontalalignment='center', fontsize=20)
+                 style='italic', fontweight='bold', horizontalalignment='center', fontsize=18)
         ax.text(pd.to_datetime("17 Apr 2020"), 17, "Stay at home → Stay Alert", style='italic', horizontalalignment='center')
 
         ax.axvline(pd.to_datetime("4 April 2020"), color="dimgrey", ymin=0.045, linewidth=3, alpha=0.4)
