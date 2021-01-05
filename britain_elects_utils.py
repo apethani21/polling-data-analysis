@@ -48,7 +48,7 @@ def extract_party_results(result):
     return process_results
 
 
-def process_time_range(time_range):
+def _process_time_range(time_range):
     if pd.isnull(time_range):
         return np.nan
 
@@ -70,6 +70,24 @@ def process_time_range(time_range):
         start = f"{split_time_range[0]} {start_month}"
         end = f"{split_time_range[3]} {end_month}"
         return start, end
+
+def _process_range_date(time_range, created_at, side):
+    """side is "start" or "end" """
+    if side == "start":
+        date_clean = time_range[0] if not pd.isnull(time_range) else time_range
+    elif side == "end":
+        date_clean = time_range[1] if not pd.isnull(time_range) else time_range
+    else:
+        raise ValueError(f"Invalid input for side: {side}, should be start or end.")
+    if pd.isnull(date_clean):
+        return date_clean
+
+    else:
+        if created_at.month >= pd.to_datetime(f"{date_clean} 1900").month:
+            date_clean = pd.to_datetime(f"{date_clean} {created_at.year}", dayfirst=True)
+        else:
+            date_clean = pd.to_datetime(f"{date_clean} {created_at.year - 1}", dayfirst=True)
+        return date_clean
 
 
 def process_wvi_data(df):
@@ -100,12 +118,15 @@ def process_wvi_data(df):
 
     df["time_range"] = (df["sources_info"]
                         .apply(lambda x: x[1].strip() if len(x) > 1 else np.nan)
-                        .apply(process_time_range))
+                        .apply(_process_time_range))  # column will now contain (start, end)
 
-    df["start"] = df["time_range"].apply(lambda x: x[0] if not pd.isnull(x) else x)
-    df["end"] = df["time_range"].apply(lambda x: x[1] if not pd.isnull(x) else x)
-    df["start"] = pd.to_datetime(df["start"] + " " + df["created_at"].dt.year.astype(str), dayfirst=True)
-    df["end"] = pd.to_datetime(df["end"] + " " + df["created_at"].dt.year.astype(str), dayfirst=True)
+    # df["start"] = df["time_range"].apply(lambda x: x[0] if not pd.isnull(x) else x)
+    # df["start"] = pd.to_datetime(df["start"] + " " + df["created_at"].dt.year.astype(str), dayfirst=True)
+    # df["end"] = df["time_range"].apply(lambda x: x[1] if not pd.isnull(x) else x)
+    # df["end"] = pd.to_datetime(df["end"] + " " + df["created_at"].dt.year.astype(str), dayfirst=True)  # handle year crossover
+    df["start"] = df.apply(lambda x: _process_range_date(x["time_range"], x["created_at"], "start"), axis=1)
+    df["end"] = df.apply(lambda x: _process_range_date(x["time_range"], x["created_at"], "end"), axis=1)
+
     df["temp_index"] = df["end"].copy()
     df["temp_index"].fillna(df["created_at"], inplace=True)
 
@@ -127,19 +148,25 @@ def process_wvi_data(df):
     return df
 
 
-def plot_vote_intention(df, add_lockdown_context=False, add_lifetime_context=False, agg=None, markersize=None):
+def plot_vote_intention(df,
+                        add_lockdown_context=False,
+                        add_lifetime_context=False,
+                        agg=None,
+                        markersize=None):
     """agg: D, W, M, Q etc."""
     if agg is not None:
         fig, (ax, ax2) = plt.subplots(2, 1, figsize=(20, 15), gridspec_kw={'height_ratios': [3, 1]})
     else:
         fig, ax = plt.subplots(1, 1, figsize=(20, 10))
 
-    df[list(parties)].plot(ax=ax,
-                           linewidth=1 if agg is None else 0,
-                           marker='o',
-                           markersize=markersize if markersize is not None else (3 if agg is None else 1),
-                           alpha=1 if agg is None else 0.75,
-                           color=[color_dict[col] for col in df[list(parties)].columns], legend=True)
+    df[list(parties)].plot(
+        ax=ax,
+        linewidth=1 if agg is None else 0,
+        marker='o',
+        markersize=markersize if markersize is not None else (3 if agg is None else 1),
+        alpha=1 if agg is None else 0.75,
+        color=[color_dict[col] for col in df[list(parties)].columns], legend=True
+    )
 
     if agg is not None:
         (df
