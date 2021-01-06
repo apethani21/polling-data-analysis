@@ -1,0 +1,14 @@
+{
+   "axes.axisbelow": false,
+   "axes.edgecolor": "lightgrey",
+   "axes.facecolor": "white",
+   "axes.labelcolor": "dimgrey",
+   "axes.spines.right": false,
+   "axes.spines.top": false,
+   "figure.facecolor": "white",
+   "lines.solid_capstyle": "round",
+   "text.color": "dimgrey",
+   "xtick.bottom": false,
+   "xtick.color": "dimgrey",
+   "ytick.color": "dimgrey"
+}
