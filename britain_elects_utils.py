@@ -19,7 +19,7 @@ def read_data(folder):
     return df
 
 
-parties = ("GRN", "LAB", "LDEM", "SNP", "CON", "BREX", "UKIP")
+parties = ("GRN", "LAB", "LDEM", "SNP", "CON", "BREX", "REFUK", "UKIP", "OTH")
 color_dict = {
     "GRN": "#77AB43",
     "LAB": "#FF2700",
@@ -27,7 +27,9 @@ color_dict = {
     "SNP": "#EFF10A",
     "CON": "#008FD5",
     "BREX": "#12B6CF",
-    "UKIP": "#B3009D"
+    "REFUK": "#12B6CF",
+    "UKIP": "#B3009D",
+    "OTH": "#000000",
 }
 
 
@@ -36,7 +38,7 @@ def extract_party_results(result):
     for party_result in result:
         party, poll_perc, change = party_result.split()
         party = party.rstrip(":")
-        assert party in parties
+        assert party in parties, f"Unrecognised party {party}"
         poll_perc = int(poll_perc.strip()[:-1] if poll_perc.endswith("%") else poll_perc.strip())
         change = change[1:] if change.startswith("(") else change
         change = change[:-1] if change.endswith(")") else change
