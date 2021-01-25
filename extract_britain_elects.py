@@ -9,7 +9,7 @@ collection = client.twitter.britainelects
 
 wvi_doc_filter = {
    "full_text": {
-      "$regex": re.compile("Westminster voting intention", re.IGNORECASE)
+      "$regex": re.compile("^Westminster voting intention", re.IGNORECASE)
    }
 }
 
