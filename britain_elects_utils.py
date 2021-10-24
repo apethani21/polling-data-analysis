@@ -42,7 +42,7 @@ def extract_party_results(result):
         poll_perc = int(poll_perc.strip()[:-1] if poll_perc.endswith("%") else poll_perc.strip())
         change = change[1:] if change.startswith("(") else change
         change = change[:-1] if change.endswith(")") else change
-        change = 0 if change == '-' else int(change)
+        change = 0 if change in {'-', '–'} else int(change)
         process_results[party] = {
             "poll_perc": poll_perc,
             "change": change
