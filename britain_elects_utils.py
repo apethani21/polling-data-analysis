@@ -165,7 +165,7 @@ def plot_vote_intention(df,
         ax=ax,
         linewidth=1 if agg is None else 0,
         marker='o',
-        markersize=markersize if markersize is not None else (3 if agg is None else 1),
+        markersize=markersize if markersize is not None else (3 if agg is None else 2),
         alpha=1 if agg is None else 0.75,
         color=[color_dict[col] for col in df[list(parties)].columns], legend=True
     )
@@ -201,39 +201,40 @@ def plot_vote_intention(df,
         ax.axvline(pd.to_datetime("10 May 2020"), color="dimgrey", ymin=0.045, linewidth=3)
 
         ax.axvspan(pd.to_datetime("23 March 2020"), pd.to_datetime("10 May 2020"), alpha=0.25, color='red', ymin=0.045)
-        ax.text(pd.to_datetime("17 Apr 2020"), 16, "First lockdown",
-                style='italic', fontweight='bold', horizontalalignment='center', fontsize=14)
+        ax.text(pd.to_datetime("17 Apr 2020"), 16, "First \n lockdown",
+                style='italic', fontweight='bold', horizontalalignment='center', fontsize=12)
 
         ax.axvline(pd.to_datetime("4 April 2020"), color="dimgrey", ymin=0.045, linewidth=3, alpha=0.4)
         ax.text(pd.to_datetime("12 Apr 2020"), 35, "Kier Starmer \n becomes \n Labour leader \n 4 Apr", 
-                 style='italic', horizontalalignment='center', fontsize=10, fontweight='bold');
+                 style='italic', horizontalalignment='center', fontsize=9, fontweight='bold');
 
         ax.axvline(pd.to_datetime("5 Nov 2020"), color="dimgrey", ymin=0.045, linewidth=3)
         ax.axvline(pd.to_datetime("2 Dec 2020"), color="dimgrey", ymin=0.045, linewidth=3)
         ax.axvspan(pd.to_datetime("5 Nov 2020"), pd.to_datetime("2 Dec 2020"), alpha=0.25, color='red', ymin=0.045)
         ax.text(pd.to_datetime("18 Nov 2020"), 16, "Second \n lockdown",
-                style='italic', fontweight='bold', horizontalalignment='center', fontsize=12)
+                style='italic', fontweight='bold', horizontalalignment='center', fontsize=8)
 
         ax.axvline(pd.to_datetime("6 Jan 2021"), color="dimgrey", ymin=0.045, linewidth=3)
-        ax.axvspan(pd.to_datetime("6 Jan 2021"), pd.to_datetime("today"), alpha=0.25, color='red', ymin=0.045)
-        ax.text(pd.to_datetime("18 Jan 2021"), 16, "Third \n lockdown",
-                style='italic', fontweight='bold', horizontalalignment='center', fontsize=12)
+        ax.axvline(pd.to_datetime("29 Mar 2021"), color="dimgrey", ymin=0.045, linewidth=3)
+        ax.axvspan(pd.to_datetime("6 Jan 2021"), pd.to_datetime("29 Mar 2021"), alpha=0.25, color='red', ymin=0.045)
+        ax.text(pd.to_datetime("15 Feb 2021"), 16, "Third \n lockdown",
+                style='italic', fontweight='bold', horizontalalignment='center', fontsize=11)
     if add_lifetime_context:
         ax.axvline(pd.to_datetime("22 Jan 2013"), color="dimgrey", ymin=0.045, ymax=0.96, linewidth=3)
         ax.text(pd.to_datetime("22 Jan 2013"), 54.5, "Cameron offers \n EU Ref upon \n winning next GE", 
-                 style='italic', horizontalalignment='center', fontsize=11, fontweight='bold')
+                 style='italic', horizontalalignment='center', fontsize=10, fontweight='bold')
 
         ax.axvline(pd.to_datetime("8 May 2015"), color="dimgrey", ymin=0.045, ymax=0.96, linewidth=3)
         ax.text(pd.to_datetime("8 May 2015"), 54.5, "Cameron \n remains PM \n maj. 12", 
-                 style='italic', horizontalalignment='center', fontsize=11, fontweight='bold')
+                 style='italic', horizontalalignment='center', fontsize=10, fontweight='bold')
 
         ax.axvline(pd.to_datetime("23 June 2016"), color="dimgrey", ymin=0.045, ymax=0.96, linewidth=3)
         ax.text(pd.to_datetime("23 June 2016"), 54.5, "EU Referendum. \n 3 weeks later, May \n becomes PM", 
-                 style='italic', horizontalalignment='center', fontsize=11, fontweight='bold')
+                 style='italic', horizontalalignment='center', fontsize=10, fontweight='bold')
 
         ax.axvline(pd.to_datetime("9 June 2017"), color="dimgrey", ymin=0.045, ymax=0.96, linewidth=3)
         ax.text(pd.to_datetime("9 June 2017"), 54.5, "May calls \n snap election, \n minority govt \n C&S with DUP", 
-                 style='italic', horizontalalignment='center', fontsize=11, fontweight='bold')
+                 style='italic', horizontalalignment='center', fontsize=10, fontweight='bold')
 
         ax.axvline(pd.to_datetime("1 Jan 2019"), color="dimgrey", ymin=0.045, ymax=0.96, linewidth=3)
         ax.text(pd.to_datetime("15 Sept 2018"), 54.5, "Commons rejects WA \n  and no deal \n (in principle).\n Commons backs \n Brady amendment",
@@ -241,11 +242,21 @@ def plot_vote_intention(df,
 
         ax.axvline(pd.to_datetime("24 July 2019"), color="dimgrey", ymin=0.045, ymax=0.96, linewidth=3)
         ax.text(pd.to_datetime("24 July 2019"), 54.5, "Johnson \n becomes PM \n maj. 80", 
-                 style='italic', horizontalalignment='center', fontsize=11, fontweight='bold')
+                 style='italic', horizontalalignment='center', fontsize=10, fontweight='bold')
 
         ax.axvline(pd.to_datetime("23 March 2020"), color="dimgrey", ymin=0.045, ymax=0.96, linewidth=3)
-        ax.text(pd.to_datetime("23 March 2020"), 54.5, "COVID19 \n Lockdown", 
-                 style='italic', horizontalalignment='center', fontsize=11, fontweight='bold');
+        ax.text(pd.to_datetime("23 March 2020"), 54.5, "COVID \n LD 1", 
+                 style='italic', horizontalalignment='center', fontsize=10, fontweight='bold');
+        
+        ax.axvline(pd.to_datetime("5 Nov 2020"), color="dimgrey", ymin=0.045, ymax=0.96, linewidth=3)
+        ax.text(pd.to_datetime("5 Dec 2020"), 54.5, "COVID \n Lockdowns \n 2 & 3", 
+                 style='italic', horizontalalignment='center', fontsize=10, fontweight='bold');
+        
+        ax.axvline(pd.to_datetime("6 Jan 2021"), color="dimgrey", ymin=0.045, ymax=0.96, linewidth=3)
+        
+        ax.axvline(pd.to_datetime("8 Dec 2021"), color="dimgrey", ymin=0.045, ymax=0.96, linewidth=3)
+        ax.text(pd.to_datetime("8 Dec 2021"), 54.5, "Partygate \n begins", 
+                 style='italic', horizontalalignment='center', fontsize=10, fontweight='bold');
 
     return fig, ax
 
