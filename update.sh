@@ -1,8 +1,8 @@
 #!/bin/bash
 printf "running extract_britain_elects.py\n"
-/home/ubuntu/anaconda3/envs/email-service/bin/python extract_britain_elects.py;
+/home/ubuntu/anaconda3/envs/polling/bin/python extract_britain_elects.py;
 printf "executing analyse_polling_data.ipynb..\n";
-/home/ubuntu/anaconda3/envs/email-service/bin/jupyter nbconvert \
+/home/ubuntu/anaconda3/envs/polling/bin/jupyter nbconvert \
     --to notebook \
     --execute \
     /home/ubuntu/repo/polling-data-analysis/analyse_polling_data.ipynb && \
